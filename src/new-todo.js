@@ -1,5 +1,5 @@
 import { todo } from "./item";
-import { list } from "./display";
+import { display, list } from "./display";
 
 function addTodo() {
     const submit = document.querySelector("#submit");
@@ -11,6 +11,7 @@ function addTodo() {
         const newTodo = todo (title, description, dueDate, priority);
         list.push(newTodo);
     })
+    display();
 }
 
 export { addTodo }

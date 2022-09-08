@@ -1,7 +1,6 @@
 const list = [];
 
 function display () {
-
     for (let i = 0; i< list.length; i++) {
         const container = document.getElementById("display");
         const div = container.appendChild(document.createElement("div"));
@@ -11,5 +10,6 @@ function display () {
         }
     }
 }
+
 
 export { display, list }
