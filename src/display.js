@@ -1,4 +1,4 @@
-const list = [];
+import { list } from "./new-todo";
 
 function display () {
     for (let i = 0; i< list.length; i++) {
@@ -11,5 +11,4 @@ function display () {
     }
 }
 
-
-export { display, list }
+export { display }

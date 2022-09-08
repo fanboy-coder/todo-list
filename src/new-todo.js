@@ -1,5 +1,7 @@
 import { todo } from "./item";
-import { display, list } from "./display";
+import { display } from "./display";
+
+const list = [];
 
 function addTodo() {
     const submit = document.querySelector("#submit");
@@ -10,8 +12,9 @@ function addTodo() {
         let priority = document.querySelector("input[name=priority]:checked").value;
         const newTodo = todo (title, description, dueDate, priority);
         list.push(newTodo);
+        console.log(list);
     })
     display();
 }
 
-export { addTodo }
+export { list, addTodo }
