@@ -1,0 +1,92 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: rgb(0, 110, 255);
+    color: white;
+    font-weight: bold;
+    height: 100%;
+    grid-column: 1/2;
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    padding-top: 70px;
+}
+
+#modal {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    grid-column: 2/3;
+    gap: 5%;
+    padding-top: 70px;
+    background-color: #fff3e6;
+}
+
+#display {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    grid-column: 2/3;
+    gap: 5%;
+    padding-top: 70px;
+    background-color: #fff3e6;
+}
+
+.todo {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    flex-direction: column;
+    border: 2px solid black;
+    padding: 1%;
+    border-radius: 10px;
+    width: 40em;
+}
+
+.delete-column {
+    display: grid;
+    grid-column: 1/2;
+}
+
+.top-row {
+    display: flex;
+    flex-direction: row;
+    grid-column: 2/3;
+    gap: 5em;
+    align-items: center;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.bottom-row {
+    display: flex;
+    flex-direction: row;
+    grid-column: 2/3;
+    gap: 5em;
+    align-items: center;
+}
+
+.delete-button {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    border: 3px solid black;
+    cursor: pointer;
+}
+
+#priority-indicator {
+    background: red;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: flex;
+}
