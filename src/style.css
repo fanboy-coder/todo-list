@@ -44,35 +44,31 @@
 
 .todo {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    flex-direction: column;
+    grid-template-columns: 0.5fr 9fr 0.5fr;
     border: 2px solid black;
     padding: 1%;
     border-radius: 10px;
-    width: 40em;
+    min-width: 60em;
+    gap: 1em;
+}
+
+.top-row {
+    display: flex;
+    grid-column: 2/3;
+    gap: 5em;
+    font-size: larger;
+    font-weight: bold;
+    justify-content: space-between;
+}
+
+.bottom-row {
+    display: flex;
+    grid-column: 2/3;
 }
 
 .delete-column {
     display: grid;
     grid-column: 1/2;
-}
-
-.top-row {
-    display: flex;
-    flex-direction: row;
-    grid-column: 2/3;
-    gap: 5em;
-    align-items: center;
-    font-size: larger;
-    font-weight: bold;
-}
-
-.bottom-row {
-    display: flex;
-    flex-direction: row;
-    grid-column: 2/3;
-    gap: 5em;
-    align-items: center;
 }
 
 .delete-button {
@@ -83,10 +79,31 @@
     cursor: pointer;
 }
 
-#priority-indicator {
+.priority-column {
+    display: grid;
+    grid-column: 3/4;
+    grid-row: 1/2;
+    justify-items: end;
+}
+
+.priority-indicator {
     background: red;
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    display: flex;
+    cursor: pointer;
+}
+
+.empty-description {
+    font-style: italic;
+    color: rgb(183, 180, 180);
+}
+
+.icon {
+    height: 20px;
+    width: 20px;
+}
+
+#new-project {
+    cursor: pointer;
 }

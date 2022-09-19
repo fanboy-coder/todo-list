@@ -31,7 +31,9 @@ function submit() {
         let dueDate = document.getElementById("start").value;
         let select = document.getElementById("priority-group");
         let priority = select.options[select.selectedIndex].value;
-        addTodo(title, description, dueDate, priority);
+        if (title != "") {
+            addTodo(title, description, dueDate, priority);
+        }
         e.preventDefault();
     });
 }
