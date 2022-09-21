@@ -1,6 +1,6 @@
-import { list, removeTodo, replace } from "./add.js";
+import { list, removeTodo, replace, submit } from "./add.js";
 
-function sidebar () {
+function sidebar() {
     const container = document.querySelector(".sidebar");
     const menu = container.appendChild(document.createElement("div"));
     menu.setAttribute("id", "menu");
@@ -11,27 +11,36 @@ function sidebar () {
     icon1.setAttribute("class", "icon");
     const p1 = inbox.appendChild(document.createElement("p"));
     p1.innerText = "Inbox";
+    inbox.addEventListener("click", () => {
+        console.log("hey");
+    });
     const today = menu.appendChild(document.createElement("div"));
     today.setAttribute("id", "today");
-    const icon2 = inbox.appendChild(document.createElement("img"));
+    const icon2 = today.appendChild(document.createElement("img"));
     icon2.src = "../src/images/calendar-today.svg";
     icon2.setAttribute("class", "icon");
-    const p2 = inbox.appendChild(document.createElement("p"));
+    const p2 = today.appendChild(document.createElement("p"));
     p2.innerText = "Today";
+    today.addEventListener("click", () => {
+        console.log("hey");
+    });
     const week = menu.appendChild(document.createElement("div"));
     week.setAttribute("id", "week");
-    const icon3 = inbox.appendChild(document.createElement("img"));
+    const icon3 = week.appendChild(document.createElement("img"));
     icon3.src = "../src/images/calendar-week.svg";
     icon3.setAttribute("class", "icon");
-    const p3 = inbox.appendChild(document.createElement("p"));
+    const p3 = week.appendChild(document.createElement("p"));
     p3.innerText = "This Week";
+    week.addEventListener("click", () => {
+        console.log("hey");
+    });
 
     const projects = container.appendChild(document.createElement("div"));
     projects.setAttribute("id", "projects");
     const title = projects.appendChild(document.createElement("h2"));
     title.textContent = "Projects";
     const newProject = projects.appendChild(document.createElement("div"));
-    newProject.setAttribute("id","new-project");
+    newProject.setAttribute("id", "new-project");
     const icon4 = newProject.appendChild(document.createElement("img"));
     icon4.src = "../src/images/plus-box.svg";
     icon4.setAttribute("class", "icon");
@@ -98,7 +107,7 @@ function display() {
                 div.setAttribute("id", "description");
                 if (list[i][elem] === "") {
                     const emptyDescription = div.appendChild(document.createElement("p"));
-                    emptyDescription.setAttribute("class", "empty-description");
+                    emptyDescription.setAttribute("class", "empty");
                     emptyDescription.innerText = "Add a description";
                 }
                 else {
@@ -173,4 +182,71 @@ function display() {
     }
 }
 
-export { sidebar, display }
+function modal() {
+    const body = document.body;
+    const div = document.createElement("div");
+    div.setAttribute("id", "modal-bg-display");
+    const modal = div.appendChild(document.createElement("div"));
+    modal.setAttribute("id", "modal");
+
+    const emptyTitle = modal.appendChild(document.createElement("p"));
+    emptyTitle.setAttribute("class", "empty");
+    emptyTitle.setAttribute("id", "new-title");
+    emptyTitle.innerText = "Add a new task";
+    emptyTitle.addEventListener("click", () => {
+        const title = modal.appendChild(document.createElement("input"));
+        title.setAttribute("id", "new-title");
+        title.setAttribute("type", "text");
+        emptyTitle.replaceWith(title);
+    })
+
+    const emptyDescription = modal.appendChild(document.createElement("p"));
+    emptyDescription.setAttribute("class", "empty");
+    emptyDescription.setAttribute("id", "new-description");
+    emptyDescription.innerText = "Add a description";
+    emptyDescription.addEventListener("click", () => {
+        const description = modal.appendChild(document.createElement("input"));
+        description.setAttribute("id", "new-description");
+        description.setAttribute("type", "text");
+        emptyDescription.replaceWith(description);
+    })
+
+    const emptyDate = modal.appendChild(document.createElement("input"));
+    emptyDate.setAttribute("type", "date");
+    emptyDate.setAttribute("id", "start");
+    emptyDate.setAttribute("value", "2018-07-22");
+    emptyDate.setAttribute("min", "2018-01-01");
+
+    const emptyPriority = modal.appendChild(document.createElement("select"));
+    emptyPriority.setAttribute("name", "priority")
+    emptyPriority.setAttribute("class", "priority-group");
+    emptyPriority.setAttribute("class", "priority-group");
+    let low = emptyPriority.appendChild(document.createElement("option"));
+    low.value = low;
+    low.textContent = "Low";
+    let medium = emptyPriority.appendChild(document.createElement("option"));
+    medium.value = medium;
+    medium.textContent = "Medium";
+    let high = emptyPriority.appendChild(document.createElement("option"));
+    high.value = high;
+    high.textContent = "High";
+
+    const submit = modal.appendChild(document.createElement("button"));
+    submit.setAttribute("type", "submit");
+    submit.setAttribute("id", "submit");
+    submit.textContent = "Submit";
+    submit.addEventListener("click", () => {
+        submit();
+    })
+
+    const close = modal.appendChild(document.createElement("button"));
+    close.setAttribute("id", "close");
+    close.textContent = "X";
+    close.addEventListener("click", () => {
+        display();
+    })
+
+    body.appendChild(div);
+}
+
+export { sidebar, display, modal }

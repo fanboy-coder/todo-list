@@ -1,5 +1,5 @@
 import "./style.css";
-import { submit } from "../src/add";
 import { sidebar } from "../src/display";
+import { inbox } from "../src/inbox"; 
 
-sidebar(), submit();
+sidebar(), inbox();
