@@ -36,8 +36,9 @@
     flex-direction: column;
     grid-column: 2/3;
     gap: 5%;
-    padding-top: 70px;
+    padding: 7%;
     background-color: #fff3e6;
+    height: 100%;
 }
 
 #display {
@@ -45,10 +46,12 @@
     align-items: center;
     flex-direction: column;
     grid-column: 2/3;
-    gap: 5%;
-    padding-top: 70px;
+    gap: 1em;
+    padding-top: 1em;
     background-color: #fff3e6;
+    font-weight: bold;
 }
+
 #modal-bg-display {
     position: fixed;
     top: 0;
@@ -64,13 +67,35 @@
 
 #modal {
     background-color: white;
-    height: 50%;
-    width: 50%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 7fr 1fr;
     border-radius: 10px;
+    padding: 2em;
+    min-width: 35%;
+    min-height: 15%;
+}
+
+#modal-main {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1/2;
+    gap: 1em;
+}
+
+#modal-close {
+    display: grid;
+    grid-column: 2/3;
+    justify-items: end;
+}
+
+#close {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    border: 0px;
+    cursor: pointer;
+    color: white;
+    background:rgb(0, 110, 255);
 }
 
 .todo {
@@ -133,4 +158,8 @@
 .icon {
     height: 20px;
     width: 20px;
+}
+
+#new-title:focus {
+    outline: none;
 }

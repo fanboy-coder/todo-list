@@ -1,5 +1,5 @@
 import { todo } from "./item";
-import { display } from "./display";
+import { display, closemodal } from "./display";
 
 const list = [];
 
@@ -24,18 +24,15 @@ function removeTodo(remove) {
 }
 
 function submit() {
-    const submit = document.querySelector("#submit");
-    submit.addEventListener("click", function (e) {
-        let title = document.getElementById("new-title").value;
-        let description = document.getElementById("new-description").value;
-        let dueDate = document.getElementById("start").value;
-        let select = document.getElementById("priority-group");
-        let priority = select.options[select.selectedIndex].value;
-        if (title != "") {
-            addTodo(title, description, dueDate, priority);
-        }
-        e.preventDefault();
-    });
+    let title = document.getElementById("new-title").value;
+    let description = document.getElementById("new-description").value;
+    let dueDate = document.getElementById("start").value;
+    let select = document.getElementById("priority-group");
+    let priority = select.options[select.selectedIndex].value;
+    if (title != undefined) {
+        addTodo(title, description, dueDate, priority);
+    }
+    closemodal();
 }
 
 function replace(replaced, replacement) {

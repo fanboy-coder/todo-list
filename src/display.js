@@ -105,7 +105,7 @@ function display() {
             if (elem === "description") {
                 const div = bottomRow.appendChild(document.createElement("div"));
                 div.setAttribute("id", "description");
-                if (list[i][elem] === "") {
+                if (list[i][elem] === undefined) {
                     const emptyDescription = div.appendChild(document.createElement("p"));
                     emptyDescription.setAttribute("class", "empty");
                     emptyDescription.innerText = "Add a description";
@@ -189,64 +189,86 @@ function modal() {
     const modal = div.appendChild(document.createElement("div"));
     modal.setAttribute("id", "modal");
 
-    const emptyTitle = modal.appendChild(document.createElement("p"));
+    const main = modal.appendChild(document.createElement("div"));
+    main.setAttribute("id", "modal-main");
+
+    const emptyTitle = main.appendChild(document.createElement("p"));
     emptyTitle.setAttribute("class", "empty");
     emptyTitle.setAttribute("id", "new-title");
     emptyTitle.innerText = "Add a new task";
     emptyTitle.addEventListener("click", () => {
-        const title = modal.appendChild(document.createElement("input"));
+        const title = main.appendChild(document.createElement("input"));
         title.setAttribute("id", "new-title");
         title.setAttribute("type", "text");
         emptyTitle.replaceWith(title);
+        document.querySelector("#new-title").select();
     })
 
-    const emptyDescription = modal.appendChild(document.createElement("p"));
+    const emptyDescription = main.appendChild(document.createElement("p"));
     emptyDescription.setAttribute("class", "empty");
     emptyDescription.setAttribute("id", "new-description");
     emptyDescription.innerText = "Add a description";
     emptyDescription.addEventListener("click", () => {
-        const description = modal.appendChild(document.createElement("input"));
+        const description = main.appendChild(document.createElement("input"));
         description.setAttribute("id", "new-description");
         description.setAttribute("type", "text");
         emptyDescription.replaceWith(description);
+        document.querySelector("#new-description").select();
+        const checktitle = document.querySelector("#new-title");
     })
 
-    const emptyDate = modal.appendChild(document.createElement("input"));
+    const emptyDate = main.appendChild(document.createElement("input"));
     emptyDate.setAttribute("type", "date");
     emptyDate.setAttribute("id", "start");
     emptyDate.setAttribute("value", "2018-07-22");
     emptyDate.setAttribute("min", "2018-01-01");
 
-    const emptyPriority = modal.appendChild(document.createElement("select"));
+    const emptyPriority = main.appendChild(document.createElement("select"));
     emptyPriority.setAttribute("name", "priority")
-    emptyPriority.setAttribute("class", "priority-group");
-    emptyPriority.setAttribute("class", "priority-group");
+    emptyPriority.setAttribute("id", "priority-group");
     let low = emptyPriority.appendChild(document.createElement("option"));
-    low.value = low;
+    low.setAttribute("value", "low");
     low.textContent = "Low";
     let medium = emptyPriority.appendChild(document.createElement("option"));
-    medium.value = medium;
+    medium.setAttribute("value", "medium");
     medium.textContent = "Medium";
     let high = emptyPriority.appendChild(document.createElement("option"));
-    high.value = high;
+    high.setAttribute("value", "high");
     high.textContent = "High";
 
-    const submit = modal.appendChild(document.createElement("button"));
-    submit.setAttribute("type", "submit");
-    submit.setAttribute("id", "submit");
-    submit.textContent = "Submit";
-    submit.addEventListener("click", () => {
+    const add = main.appendChild(document.createElement("button"));
+    add.setAttribute("type", "submit");
+    add.setAttribute("id", "submit");
+    add.textContent = "Submit";
+    add.addEventListener("click", (e) => {
         submit();
+        e.preventDefault();
     })
 
-    const close = modal.appendChild(document.createElement("button"));
-    close.setAttribute("id", "close");
-    close.textContent = "X";
-    close.addEventListener("click", () => {
-        display();
+    const close = modal.appendChild(document.createElement("div"));
+    close.setAttribute("id", "modal-close");
+
+    const closebtn = close.appendChild(document.createElement("button"));
+    closebtn.setAttribute("id", "close");
+    closebtn.textContent = "x";
+    closebtn.addEventListener("click", () => {
+        closemodal();
     })
 
     body.appendChild(div);
+
+    document.getElementById("modal-bg-display").onclick = function (e) {
+        if (e.target === document.getElementById("modal-bg-display")) {
+            closemodal();
+        }
+    }
 }
 
-export { sidebar, display, modal }
+function closemodal() {
+    const background = document.querySelector("#modal-bg-display");
+    const modal = document.querySelector("#modal");
+    background.remove();
+    modal.remove();
+}
+
+export { sidebar, display, modal, closemodal }

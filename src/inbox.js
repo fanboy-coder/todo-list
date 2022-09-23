@@ -14,6 +14,8 @@ function inbox () {
     newTodo.addEventListener("click", () => {
         modal();
     });
+    const display = main.appendChild(document.createElement("div"));
+    display.setAttribute("id","display");
 }
 
 export { inbox }
