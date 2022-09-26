@@ -10,6 +10,10 @@ function addTodo(title, description, dueDate, priority) {
     display();
 }
 
+const Project = function (name) {
+    this.name = name;
+} 
+
 function clear() {
     const todos = document.querySelectorAll(".todo");
     todos.forEach(todo => {
@@ -36,9 +40,7 @@ function submit() {
 }
 
 function replace(replaced, replacement) {
-
     for (let i = 0; i < list.length; i++) {
-
         function getObjKey(list, replaced) {
             return Object.keys(list[i]).find(key => list[i][key] === replaced);
         }
@@ -68,4 +70,4 @@ function replace(replaced, replacement) {
     display();
 }
 
-export { list, addTodo, submit, removeTodo, replace }
+export { list, addTodo, submit, removeTodo, replace, Project }

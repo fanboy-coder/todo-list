@@ -1,4 +1,4 @@
-import { list, removeTodo, replace, submit } from "./add.js";
+import { list, removeTodo, replace, submit, Project } from "./add.js";
 
 function sidebar() {
     const container = document.querySelector(".sidebar");
@@ -12,7 +12,7 @@ function sidebar() {
     const p1 = inbox.appendChild(document.createElement("p"));
     p1.innerText = "Inbox";
     inbox.addEventListener("click", () => {
-        console.log("hey");
+        display();
     });
     const today = menu.appendChild(document.createElement("div"));
     today.setAttribute("id", "today");
@@ -45,9 +45,40 @@ function sidebar() {
     icon4.src = "../src/images/plus-box.svg";
     icon4.setAttribute("class", "icon");
     const p4 = newProject.appendChild(document.createElement("p"));
-    p4.innerText = "Add project";
+    p4.innerText = "Add Project";
     newProject.addEventListener("click", () => {
-        console.log("hey");
+        const addProject = document.querySelector("#add-project");
+        if (!addProject) {
+            const input = projects.appendChild(document.createElement("input"));
+            input.setAttribute("id", "add-project");
+            document.querySelector("#add-project").select();
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    console.log("do something");
+                }
+                if (e.key === "Escape") {
+                    input.remove();
+                    buttons.remove();
+                }
+            })
+            const buttons = projects.appendChild(document.createElement("div"));
+            buttons.setAttribute("class","buttons");
+            const add = buttons.appendChild(document.createElement("button"));
+            add.setAttribute("class", "button");
+            add.setAttribute("id", "add");
+            add.innerText = "Add";
+            add.addEventListener("click", () => {
+                console.log("do something");
+            })
+            const cancel = buttons.appendChild(document.createElement("button"));
+            cancel.setAttribute("class", "button");
+            cancel.setAttribute("id", "cancel");
+            cancel.innerText = "Cancel";
+            cancel.addEventListener("click", () => {
+                input.remove();
+                buttons.remove();
+            })
+        }
     });
 }
 
@@ -127,7 +158,13 @@ function display() {
                     if (e.key === "Enter") {
                         let replaced = list[i].title;
                         let replacement = document.querySelector(".replace-title").value;
-                        replace(replaced, replacement);
+                        if (replacement != "") {
+                            replace(replaced, replacement);
+                        }
+                        else {
+                            let replacement = list[i].title;
+                            replace(replaced, replacement);
+                        }
                     }
                     if (e.key === "Escape") {
                         let replaced = list[i].title;
@@ -149,7 +186,13 @@ function display() {
                     if (e.key === "Enter") {
                         let replaced = list[i].description;
                         let replacement = document.querySelector(".replace-description").value;
-                        replace(replaced, replacement);
+                        if (replacement != "") {
+                            replace(replaced, replacement);
+                        }
+                        else {
+                            let replacement = list[i].description;
+                            replace(replaced, replacement);
+                        }
                     }
                     if (e.key === "Escape") {
                         console.log(list[i].description);
@@ -214,7 +257,6 @@ function modal() {
         description.setAttribute("type", "text");
         emptyDescription.replaceWith(description);
         document.querySelector("#new-description").select();
-        const checktitle = document.querySelector("#new-title");
     })
 
     const emptyDate = main.appendChild(document.createElement("input"));
@@ -247,10 +289,9 @@ function modal() {
 
     const close = modal.appendChild(document.createElement("div"));
     close.setAttribute("id", "modal-close");
-
-    const closebtn = close.appendChild(document.createElement("button"));
-    closebtn.setAttribute("id", "close");
-    closebtn.textContent = "x";
+    const closebtn = close.appendChild(document.createElement("img"));
+    closebtn.src = "../src/images/close-circle.svg"
+    closebtn.setAttribute("class", "icon");
     closebtn.addEventListener("click", () => {
         closemodal();
     })
