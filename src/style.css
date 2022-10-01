@@ -22,7 +22,7 @@
     font-weight: bold;
 }
 
-#menu, #projects {
+#menu, #projects, #projects-list {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
@@ -39,11 +39,15 @@
     color: black;
 }
 
-#inbox, #today, #week, #new-project, #new-todo {
+#inbox, #today, #week, #new-project, #new-todo, .project-name, #project-box {
     display: flex;
     flex-direction: row;
     gap: 1em;
     cursor: pointer;
+}
+
+#project-box {
+    align-items: center;
 }
 
 #display {

@@ -1,23 +1,34 @@
-import { todo } from "./item";
-import { display, closemodal } from "./display";
+import { todo, createProject } from "./item";
+import { display, projects, closemodal } from "./display";
 
 const list = [];
+const projectList = [];
 
-function addTodo(title, description, dueDate, priority) {
-    const newTodo = todo(title, description, dueDate, priority);
+function addTodo(title, description, dueDate, priority,project) {
+    const newTodo = todo(title, description, dueDate, priority, project);
     list.push(newTodo);
     clear();
     display();
 }
 
-const Project = function (name) {
-    this.name = name;
-} 
+function addProject (projectname) {
+    const newProject = createProject(projectname);
+    projectList.push(newProject);
+    clearProjects();
+    projects();
+}
 
 function clear() {
     const todos = document.querySelectorAll(".todo");
     todos.forEach(todo => {
         todo.remove();
+    })
+}
+
+function clearProjects() {
+    const projects = document.querySelectorAll(".project-box");
+    projects.forEach(project => {
+        project.remove();
     })
 }
 
@@ -27,14 +38,21 @@ function removeTodo(remove) {
     display();
 }
 
+function removeProject(remove) {
+    projectList.splice(remove,1);
+    clearProjects();
+}
+
 function submit() {
+    const projectName = document.getElementById("project-title");
+    let project = projectName.innerText;
     let title = document.getElementById("new-title").value;
     let description = document.getElementById("new-description").value;
     let dueDate = document.getElementById("start").value;
     let select = document.getElementById("priority-group");
     let priority = select.options[select.selectedIndex].value;
     if (title != undefined) {
-        addTodo(title, description, dueDate, priority);
+        addTodo(title, description, dueDate, priority, project);
     }
     closemodal();
 }
@@ -70,4 +88,4 @@ function replace(replaced, replacement) {
     display();
 }
 
-export { list, addTodo, submit, removeTodo, replace, Project }
+export { list, projectList, addTodo, addProject, removeProject, clearProjects, submit, removeTodo, replace, clear }

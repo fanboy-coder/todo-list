@@ -1,9 +1,13 @@
 import { modal } from "./display"
+import { addProject} from "./add.js"
 
 function inbox () {
     const main = document.getElementById("main");
-    const title = main.appendChild(document.createElement("h2"));
+    const headline = main.appendChild(document.createElement("div"));
+    headline.setAttribute("id","headline-box");
+    const title = headline.appendChild(document.createElement("h2"));
     title.textContent = "Inbox";
+    title.setAttribute("id", "project-title");
     const newTodo = main.appendChild(document.createElement("div"));
     newTodo.setAttribute("id","new-todo");
     const icon = newTodo.appendChild(document.createElement("img"));

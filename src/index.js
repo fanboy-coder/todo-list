@@ -1,5 +1,4 @@
 import "./style.css";
-import { sidebar } from "../src/display";
-import { inbox } from "../src/inbox"; 
+import { sidebar, inbox } from "../src/display";
 
 sidebar(), inbox();

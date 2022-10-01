@@ -1,16 +1,22 @@
-const todo =  (title, description, dueDate, priority) => {
-
-    let checklist = false;
-    let project = "Default";
+const todo =  (title, description, dueDate, priority, project) => {
 
     return {
         title,
         description,
         dueDate,
-        priority,
-        checklist,  
+        priority,  
         project
     };
 };
 
-export { todo }
+const createProject = (projectname) => {
+
+    let newProject = projectname;
+
+    return {
+        newProject
+    }
+
+}
+
+export { todo, createProject }
