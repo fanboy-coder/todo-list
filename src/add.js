@@ -51,9 +51,9 @@ function removeProject(remove) {
 
 // remove all todos with a determined value from the list
 function removeFromList(title) {
-    for (let i=list.length -1; i>=0; i--) {
+    for (let i = list.length - 1; i >= 0; i--) {
         if (list[i].project === title) {
-            list.splice(i,1);
+            list.splice(i, 1);
         }
     }
 }
@@ -107,41 +107,14 @@ function replace(replaced, replacement) {
 
 function replaceProject(replaced, replacement) {
 
-    for (let i = 0; i < projectList.length; i++) {
+    const objIndex = projectList.findIndex((obj => obj.newProject === replaced));
+    projectList[objIndex].newProject = replacement;
 
-        console.log(projectList[i])
-        // if (projectList[i].newProject === replaced) {
-        //    projectList[i].newProject === replacement;
-        // }
-        // console.log(projectList)
-        
-    //     function getObjKey(list, replaced) {
-    //         return Object.keys(list[i]).find(key => list[i][key] === replaced);
-    //     }
-
-    //     let value = getObjKey(list, replaced);
-
-    //     if (value === "title") {
-    //         const index = list.findIndex(object => {
-    //             return object.title === replaced;
-    //         })
-    //         if (index !== -1) {
-    //             list[index].title = replacement;
-    //         }
-    //     }
-
-    //     if (value === "description") {
-    //         const index = list.findIndex(object => {
-    //             return object.description === replaced;
-    //         })
-    //         if (index !== -1) {
-    //             list[index].description = replacement;
-    //         }
-    //     }
+    for (let i = 0; i < list.length; i++) {
+        const updateList = list.findIndex((obj => obj.project === replaced));
+        return list[updateList].project = replacement;
     }
-
-    clear();
-    // projects()
+    projects();
 }
 
 export { list, projectList, removeFromList, addTodo, addProject, removeProject, clearProjects, replaceProject, submit, removeTodo, replace, clear }
