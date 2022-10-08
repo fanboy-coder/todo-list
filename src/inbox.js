@@ -1,5 +1,4 @@
 import { modal } from "./display"
-import { addProject} from "./add.js"
 
 function inbox () {
     const main = document.getElementById("main");

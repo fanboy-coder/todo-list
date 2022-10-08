@@ -1,5 +1,6 @@
-import { list, removeTodo, replace, clear, submit, addProject, removeProject, clearProjects, projectList } from "./add.js";
+import { list, removeFromList, removeTodo, replace, clear, submit, addProject, removeProject, clearProjects, replaceProject, projectList } from "./add.js";
 
+// creates the inbox page
 function inbox() {
     const main = document.getElementById("main");
     const headline = main.appendChild(document.createElement("div"));
@@ -7,11 +8,20 @@ function inbox() {
     const title = headline.appendChild(document.createElement("h2"));
     title.textContent = "Inbox";
     title.setAttribute("id", "project-title");
+    const del = headline.appendChild(document.createElement("img"));
+    del.src = "../src/images/close-circle.svg"
+    del.setAttribute("class", "icon");
+    del.style.visibility = "hidden";
+    del.setAttribute("id", "delete-project");
+    del.addEventListener("click", () => {
+        deleteProjectModal();
+    })
     todoButton();
     const display = main.appendChild(document.createElement("div"));
     display.setAttribute("id", "display");
 }
 
+// creates the sidebar
 function sidebar() {
     const container = document.querySelector(".sidebar");
     const menu = container.appendChild(document.createElement("div"));
@@ -45,6 +55,7 @@ function sidebar() {
         clear();
         const main = document.getElementById("project-title");
         main.textContent = "Due today";
+        todoButton();
         display();
     });
 
@@ -60,6 +71,7 @@ function sidebar() {
         clear();
         const main = document.getElementById("project-title");
         main.textContent = "Due this week";
+        todoButton();
         display();
     });
 
@@ -71,6 +83,8 @@ function sidebar() {
     title.setAttribute("class", "headline");
     const projectList = projects.appendChild(document.createElement("div"));
     projectList.setAttribute("id", "projects-list");
+
+    // field to create a new project
     const newProject = projects.appendChild(document.createElement("div"));
     newProject.setAttribute("id", "new-project");
     const icon4 = newProject.appendChild(document.createElement("img"));
@@ -97,8 +111,10 @@ function sidebar() {
                     buttons.remove();
                 }
             })
+            // add a project and cancel buttons
             const buttons = projects.appendChild(document.createElement("div"));
             buttons.setAttribute("class", "buttons");
+
             const add = buttons.appendChild(document.createElement("button"));
             add.setAttribute("class", "button");
             add.setAttribute("id", "add");
@@ -122,33 +138,76 @@ function sidebar() {
     });
 }
 
+// creates new projects
 function projects() {
     clearProjects();
     for (let i = 0; i < projectList.length; i++) {
 
+        // append a new project to the sidebar
         const container = document.getElementById("projects-list");
         const projectBox = container.appendChild(document.createElement("div"));
         projectBox.setAttribute("class", "project-box");
-        projectBox.setAttribute("id",[i]);
+        projectBox.setAttribute("id", [i]);
         const project = projectBox.appendChild(document.createElement("p"));
         project.setAttribute("class", "project-name");
         project.setAttribute("id", [i]);
 
+        // creates a new project page
         for (let elem in projectList[i]) {
             project.innerText = projectList[i][elem];
             clear();
             const main = document.getElementById("project-title");
             main.textContent = projectList[i][elem];
+            main.setAttribute("class", "project-headline");
+            main.addEventListener("click", () => {
+                const input = document.createElement("input");
+                input.setAttribute("class", "replace-project-name");
+                main.replaceWith(input);
+                document.querySelector(".replace-project-name").select();
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        let replaced = projectList[i].newProject;
+                        let replacement = document.querySelector(".replace-project-name").value;
+                        if (replacement != "") {
+                            replaceProject(replaced, replacement);
+                        }
+                        else {
+                            let replacement = projectList[i].newProject;
+                            replaceProject(replaced, replacement);
+                        }
+                    }
+                    if (e.key === "Escape") {
+                        let replaced = projectList[i].newProject;
+                        let replacement = projectList[i].newProject;
+                        replaceProject(replaced, replacement);
+                    }
+                });
+            })
+            const del = document.getElementById("delete-project");
+            del.style.visibility = "visible";
             project.addEventListener("click", () => {
                 clear();
                 const main = document.getElementById("project-title");
                 main.textContent = projectList[i][elem];
+                main.setAttribute("class", "headline");
+                const del = document.getElementById("delete-project");
+                del.style.visibility = "visible";
+                // const del = main.appendChild(document.createElement("img"));
+                // del.src = "../src/images/close-circle.svg"
+                // del.setAttribute("class", "icon");
+                // del.addEventListener("click", () => {
+                //     // deleteProjectModal();
+                //     console.log("hey");
+                // })
+                todoButton();
                 display();
             })
+
         }
     }
 }
 
+// displays the todos in the page
 function display() {
     const checkProject = document.getElementById("project-title");
 
@@ -294,6 +353,7 @@ function display() {
     }
 }
 
+//opens a new todo modal
 function modal() {
     const body = document.body;
     const div = document.createElement("div");
@@ -374,33 +434,92 @@ function modal() {
     }
 }
 
-function closemodal() {
-    const background = document.querySelector("#modal-bg-display");
-    const modal = document.querySelector("#modal");
-    background.remove();
-    modal.remove();
+// opens a delete project modal
+function deleteProjectModal() {
+    const body = document.body;
+    const div = document.createElement("div");
+    div.setAttribute("id", "modal-bg-display");
+
+    const main = div.appendChild(document.createElement("div"));
+    main.setAttribute("id", "delete-modal");
+    const warning = main.appendChild(document.createElement("div"));
+    warning.setAttribute("id", "warning-box");
+    const h2 = warning.appendChild(document.createElement("h2"));
+    h2.innerText = "Are you sure you want to delete this project?"
+
+    const buttons = main.appendChild(document.createElement("div"));
+    buttons.setAttribute("id", "delete-project-buttons");
+    const yes = buttons.appendChild(document.createElement("button"));
+    yes.setAttribute("class", "button");
+    yes.setAttribute("id", "yes");
+    yes.innerText = "Yes";
+    yes.addEventListener("click", () => {
+        const get = document.getElementById("project-title");
+        const title = get.innerText;
+        const remove = projectList.map(object => object.newProject).indexOf(title);
+        removeProject(remove);
+        removeFromList(title);
+        closemodal();
+        clearPage();
+        inbox();
+        display();
+    })
+    const no = buttons.appendChild(document.createElement("button"));
+    no.setAttribute("class", "button");
+    no.setAttribute("id", "no");
+    no.innerText = "No";
+    no.addEventListener("click", () => {
+        main.remove();
+        div.remove();
+    })
+
+    body.appendChild(div);
 }
 
+// closes a modal
+function closemodal() {
+    const background = document.querySelector("#modal-bg-display");
+    background.remove();
+}
+
+// creates or removes a add todo button
 function todoButton() {
+
+    const check = document.getElementById("new-todo");
     const checkProject = document.getElementById("project-title");
 
-    if (checkProject.innerText != "Due today" || checkProject.innerText != "Due this week") {
+    if (checkProject.innerText !== "Due today") {
+        if (checkProject.innerText !== "Due this week") {
+            if (!check) {
+                const newTodo = main.appendChild(document.createElement("div"));
+                newTodo.setAttribute("id", "new-todo");
+                const icon = newTodo.appendChild(document.createElement("img"));
+                icon.src = "../src/images/plus-box.svg";
+                icon.setAttribute("class", "icon");
+                const p = newTodo.appendChild(document.createElement("p"));
+                p.innerText = "Add Task";
+                newTodo.addEventListener("click", () => {
+                    modal();
+                });
+            }
+        }
 
-        const check = document.getElementById("new-todo");
-
-        if (!check) {
-            const newTodo = main.appendChild(document.createElement("div"));
-            newTodo.setAttribute("id", "new-todo");
-            const icon = newTodo.appendChild(document.createElement("img"));
-            icon.src = "../src/images/plus-box.svg";
-            icon.setAttribute("class", "icon");
-            const p = newTodo.appendChild(document.createElement("p"));
-            p.innerText = "Add Task";
-            newTodo.addEventListener("click", () => {
-                modal();
-            });
+    }
+    if (checkProject.innerText === "Due today" || checkProject.innerText === "Due this week") {
+        if (check) {
+            check.remove();
         }
     }
+}
+
+// clears the page after deleting a project
+function clearPage() {
+    const headline = document.getElementById("headline-box");
+    const button = document.getElementById("new-todo");
+    const display = document.getElementById("display");
+    headline.remove();
+    button.remove();
+    display.remove();
 }
 
 export { sidebar, projects, display, modal, closemodal, inbox }
