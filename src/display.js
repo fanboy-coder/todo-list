@@ -39,6 +39,8 @@ function sidebar() {
         clear();
         const main = document.getElementById("project-title");
         main.textContent = "Inbox";
+        const del = document.getElementById("delete-project");
+        del.style.visibility = "hidden";
         todoButton();
         display();
     });
@@ -55,6 +57,10 @@ function sidebar() {
         clear();
         const main = document.getElementById("project-title");
         main.textContent = "Due today";
+        const del = document.getElementById("delete-project");
+        if (del) {
+            del.style.visibility = "hidden";
+        }
         todoButton();
         display();
     });
@@ -71,6 +77,10 @@ function sidebar() {
         clear();
         const main = document.getElementById("project-title");
         main.textContent = "Due this week";
+        const del = document.getElementById("delete-project");
+        if (del) {
+            del.style.visibility = "hidden";
+        }
         todoButton();
         display();
     });
@@ -138,7 +148,7 @@ function sidebar() {
     });
 }
 
-// creates new projects
+// creates the projects sidebar and pages
 function projects() {
     clearProjects();
     for (let i = 0; i < projectList.length; i++) {
@@ -155,52 +165,9 @@ function projects() {
         // creates a new project page
         for (let elem in projectList[i]) {
             project.innerText = projectList[i][elem];
-            clear();
-            const main = document.getElementById("project-title");
-            main.textContent = projectList[i][elem];
-            main.setAttribute("class", "project-headline");
-            main.addEventListener("click", () => {
-                const input = document.createElement("input");
-                input.setAttribute("class", "replace-project-name");
-                main.replaceWith(input);
-                document.querySelector(".replace-project-name").select();
-                input.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        let replaced = projectList[i].newProject;
-                        let replacement = document.querySelector(".replace-project-name").value;
-                        if (replacement != "") {
-                            replaceProject(replaced, replacement);
-                        }
-                        else {
-                            let replacement = projectList[i].newProject;
-                            replaceProject(replaced, replacement);
-                        }
-                    }
-                    if (e.key === "Escape") {
-                        let replaced = projectList[i].newProject;
-                        let replacement = projectList[i].newProject;
-                        replaceProject(replaced, replacement);
-                    }
-                });
-            })
-            const del = document.getElementById("delete-project");
-            del.style.visibility = "visible";
+            let page = projectList[i][elem];
             project.addEventListener("click", () => {
-                clear();
-                const main = document.getElementById("project-title");
-                main.textContent = projectList[i][elem];
-                main.setAttribute("class", "headline");
-                const del = document.getElementById("delete-project");
-                del.style.visibility = "visible";
-                // const del = main.appendChild(document.createElement("img"));
-                // del.src = "../src/images/close-circle.svg"
-                // del.setAttribute("class", "icon");
-                // del.addEventListener("click", () => {
-                //     // deleteProjectModal();
-                //     console.log("hey");
-                // })
-                todoButton();
-                display();
+                projectPage(page);
             })
 
         }
@@ -351,6 +318,51 @@ function display() {
             })
         }
     }
+}
+
+function projectPage(page) {
+    clearPage();
+    const main = document.getElementById("main");
+    const headline = main.appendChild(document.createElement("div"));
+    headline.setAttribute("id", "headline-box");
+    const title = headline.appendChild(document.createElement("h2"));
+    title.setAttribute("id", "project-title");
+    title.textContent = page;
+    title.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.setAttribute("class", "replace-project-name");
+        title.replaceWith(input);
+        document.querySelector(".replace-project-name").select();
+        let replaced = title.textContent;
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                let replacement = document.querySelector(".replace-project-name").value;
+                if (replacement != "") {
+                    replaceProject(replaced, replacement);
+                }
+                else {
+                    let replacement = title.textContent;
+                    replaceProject(replaced, replacement);
+                }
+            }
+            if (e.key === "Escape") {
+                let replaced = title.textContent;
+                let replacement = title.textContent;
+                replaceProject(replaced, replacement);
+            }
+        });
+    })
+    const del = headline.appendChild(document.createElement("img"));
+    del.src = "../src/images/close-circle.svg"
+    del.setAttribute("class", "icon");
+    del.setAttribute("id", "delete-project");
+    del.addEventListener("click", () => {
+        deleteProjectModal();
+    })
+    todoButton();
+    const displayarea = main.appendChild(document.createElement("div"));
+    displayarea.setAttribute("id", "display");
+    display();
 }
 
 //opens a new todo modal
@@ -522,4 +534,4 @@ function clearPage() {
     display.remove();
 }
 
-export { sidebar, projects, display, modal, closemodal, inbox }
+export { sidebar, projects, display, modal, clearPage, closemodal, inbox, projectPage }

@@ -1,5 +1,5 @@
 import { todo, createProject } from "./item";
-import { display, projects, closemodal } from "./display";
+import { display, projects, closemodal, clearPage, projectPage } from "./display";
 
 const list = [];
 const projectList = [];
@@ -10,6 +10,7 @@ function addTodo(title, description, dueDate, priority, project) {
     list.push(newTodo);
     clear();
     display();
+    console.log(list)
 }
 
 // add a new project to the projects list
@@ -112,8 +113,19 @@ function replaceProject(replaced, replacement) {
 
     for (let i = 0; i < list.length; i++) {
         const updateList = list.findIndex((obj => obj.project === replaced));
-        return list[updateList].project = replacement;
+        list[updateList].project = replacement;
     }
+
+    let input = document.querySelector(".replace-project-name");
+    let title = document.createElement("h2");
+    title.setAttribute("class", "project-headline");
+    title.setAttribute("id","project-title");
+    title.textContent = replacement;
+    input.replaceWith(title);
+
+    let page = replacement;
+    
+    projectPage(page);
     projects();
 }
 
