@@ -173,12 +173,11 @@
     justify-items: end;
 }
 
-.priority-indicator {
+#priority-indicator {
     background: red;
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    cursor: pointer;
 }
 
 .empty {

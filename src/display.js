@@ -1,4 +1,4 @@
-import { list, removeFromList, removeTodo, replace, clear, submit, addProject, removeProject, clearProjects, replaceProject, projectList } from "./add.js";
+import { list, removeFromList, removeTodo, replace, replaceDate, clear, submit, addProject, removeProject, clearProjects, replaceProject, projectList } from "./add.js";
 
 // creates the inbox page
 function inbox() {
@@ -42,7 +42,10 @@ function sidebar() {
         const del = document.getElementById("delete-project");
         del.style.visibility = "hidden";
         todoButton();
-        display();
+        for (let i = 0; i < list.length; i++) {
+                list[i].project = "Inbox";
+            }
+        display(list);
     });
 
     //today
@@ -62,7 +65,8 @@ function sidebar() {
             del.style.visibility = "hidden";
         }
         todoButton();
-        display();
+        const date = document.getElementById("today");
+        filterbyDate(date.id);
     });
 
     //week
@@ -82,7 +86,8 @@ function sidebar() {
             del.style.visibility = "hidden";
         }
         todoButton();
-        display();
+        let date = document.getElementById("week");
+        filterbyDate(date.id);
     });
 
     //projects
@@ -148,6 +153,41 @@ function sidebar() {
     });
 }
 
+function filterbyDate(date) {
+    var utc = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
+
+    let todayArr = [];
+    let weekArr = [];
+    let allWeek = [];
+
+    let weekDays = Array.from(Array(7).keys()).map((idx) => { const d = new Date(); d.setDate(d.getDate() - d.getDay() + idx); return d; });
+
+    for (let a = 0; a < weekDays.length; a++) {
+        allWeek.push(weekDays[a].toJSON().slice(0, 10).replace(/-/g, '-'));
+    }
+
+    if (date === "today") {
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].dueDate === utc) {
+                list[i].project = "Due " + date;
+                todayArr.push(list[i]);
+            }
+        }
+        display(todayArr);
+    }
+    if (date === "week") {
+        for (let i = 0; i < list.length; i++) {
+            for (let j = 0; j < allWeek.length; j++) {
+                if (list[i].dueDate === allWeek[j]) {
+                    list[i].project = "Due this " + date;
+                    weekArr.push(list[i]);
+                }
+            }
+        }
+        display(weekArr);
+    }
+}
+
 // creates the projects sidebar and pages
 function projects() {
     clearProjects();
@@ -175,12 +215,12 @@ function projects() {
 }
 
 // displays the todos in the page
-function display() {
+function display(arr) {
     const checkProject = document.getElementById("project-title");
 
-    for (let i = 0; i < list.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
 
-        if (checkProject.innerText === list[i].project) {
+        if (checkProject.innerText === arr[i].project) {
             const container = document.getElementById("display");
             const div = container.appendChild(document.createElement("div"));
             div.setAttribute("class", "todo");
@@ -204,41 +244,43 @@ function display() {
             const priorityColumn = div.appendChild(document.createElement("div"));
             priorityColumn.setAttribute("class", "priority-column");
 
-            for (let elem in list[i]) {
+            for (let elem in arr[i]) {
                 if (elem === "title") {
                     const p = topRow.appendChild(document.createElement("p"));
                     p.setAttribute("id", [elem]);
-                    p.innerText = list[i][elem];
+                    p.innerText = arr[i][elem];
                 }
                 if (elem === "dueDate") {
                     const p = topRow.appendChild(document.createElement("p"));
                     p.setAttribute("id", [elem]);
-                    p.innerText = "Due in: " + list[i][elem];
+                    p.innerText = "Due in: " + arr[i][elem];
                 }
                 if (elem === "priority") {
                     const div = priorityColumn.appendChild(document.createElement("div"));
-                    div.setAttribute("id", [elem]);
-                    div.setAttribute("class", "priority-indicator");
-                    if (list[i][elem] === "low") {
+                    div.setAttribute("id", "priority-indicator");
+                    if (arr[i][elem] === "low") {
                         div.style.background = "green";
+                        div.setAttribute("class", "low");
                     }
-                    if (list[i][elem] === "medium") {
+                    if (arr[i][elem] === "medium") {
                         div.style.background = "yellow";
+                        div.setAttribute("class", "medium");
                     }
-                    if (list[i][elem] === "high") {
+                    if (arr[i][elem] === "high") {
                         div.style.background = "red";
+                        div.setAttribute("class", "high");
                     }
                 }
                 if (elem === "description") {
                     const div = bottomRow.appendChild(document.createElement("div"));
                     div.setAttribute("id", "description");
-                    if (list[i][elem] === undefined) {
+                    if (arr[i][elem] === undefined) {
                         const emptyDescription = div.appendChild(document.createElement("p"));
                         emptyDescription.setAttribute("class", "empty");
                         emptyDescription.innerText = "Add a description";
                     }
                     else {
-                        div.innerText = list[i][elem];
+                        div.innerText = arr[i][elem];
                     }
                 }
             }
@@ -252,19 +294,19 @@ function display() {
                     document.querySelector(".replace-title").select();
                     input.addEventListener("keydown", (e) => {
                         if (e.key === "Enter") {
-                            let replaced = list[i].title;
+                            let replaced = arr[i].title;
                             let replacement = document.querySelector(".replace-title").value;
                             if (replacement != "") {
                                 replace(replaced, replacement);
                             }
                             else {
-                                let replacement = list[i].title;
+                                let replacement = arr[i].title;
                                 replace(replaced, replacement);
                             }
                         }
                         if (e.key === "Escape") {
-                            let replaced = list[i].title;
-                            let replacement = list[i].title;
+                            let replaced = arr[i].title;
+                            let replacement = arr[i].title;
                             replace(replaced, replacement);
                         }
                     });
@@ -280,42 +322,64 @@ function display() {
                     document.querySelector(".replace-description").select();
                     input.addEventListener("keydown", (e) => {
                         if (e.key === "Enter") {
-                            let replaced = list[i].description;
+                            let replaced = arr[i].description;
                             let replacement = document.querySelector(".replace-description").value;
                             if (replacement != "") {
                                 replace(replaced, replacement);
                             }
                             else {
-                                let replacement = list[i].description;
+                                let replacement = arr[i].description;
                                 replace(replaced, replacement);
                             }
                         }
                         if (e.key === "Escape") {
-                            let replaced = list[i].description;
-                            let replacement = list[i].description;
+                            let replaced = arr[i].description;
+                            let replacement = arr[i].description;
                             replace(replaced, replacement);
                         }
                     });
                 });
             })
 
-            const priorities = document.querySelectorAll("#priority");
-            priorities.forEach(priority => {
-                priority.addEventListener("click", () => {
-                    const input = document.createElement("select");
-                    input.setAttribute("class", "priority-group");
-                    let low = input.appendChild(document.createElement("option"));
-                    low.value = low;
-                    low.textContent = "Low";
-                    let medium = input.appendChild(document.createElement("option"));
-                    medium.value = medium;
-                    medium.textContent = "Medium";
-                    let high = input.appendChild(document.createElement("option"));
-                    high.value = high;
-                    high.textContent = "High";
-                    priority.replaceWith(input);
+            const dates = document.querySelectorAll("#dueDate");
+            dates.forEach(date => {
+                date.addEventListener("click", () => {
+                    const emptyDate = document.createElement("input");
+                    emptyDate.setAttribute("type", "date");
+                    emptyDate.setAttribute("id", "start");
+                    emptyDate.setAttribute("min", "2018-01-01");
+                    date.replaceWith(emptyDate);
+                    emptyDate.addEventListener("change", () => {
+                        arr[i].dueDate = document.getElementById("start").value;
+                        replaceDate();
+                    })
                 })
             })
+
+            // const priorities = document.querySelectorAll("#priority-indicator");
+            // priorities.forEach(priority => {
+            //     priority.addEventListener("click", () => {
+            //         const input = document.createElement("select");
+            //         input.setAttribute("id", "select")
+            //         input.setAttribute("class", "priority-group");
+            //         let low = input.appendChild(document.createElement("option"));
+            //         low.value = low;
+            //         low.textContent = "Low";
+            //         let medium = input.appendChild(document.createElement("option"));
+            //         medium.value = medium;
+            //         medium.textContent = "Medium";
+            //         let high = input.appendChild(document.createElement("option"));
+            //         high.value = high;
+            //         high.textContent = "High";
+            //         let replaced = priority.className;
+            //         priority.replaceWith(input);
+            //         const select = document.getElementById("select");
+            //         select.addEventListener('change', function handleChange(event) {
+            //             let replacement = select.options[select.selectedIndex].text;
+            //             replace(replaced, replacement);
+            //         });
+            //     })
+            // })
         }
     }
 }
@@ -362,7 +426,7 @@ function projectPage(page) {
     todoButton();
     const displayarea = main.appendChild(document.createElement("div"));
     displayarea.setAttribute("id", "display");
-    display();
+    display(list);
 }
 
 //opens a new todo modal
@@ -403,8 +467,8 @@ function modal() {
     const emptyDate = main.appendChild(document.createElement("input"));
     emptyDate.setAttribute("type", "date");
     emptyDate.setAttribute("id", "start");
-    emptyDate.setAttribute("value", "2018-07-22");
     emptyDate.setAttribute("min", "2018-01-01");
+    emptyDate.setAttribute
 
     const emptyPriority = main.appendChild(document.createElement("select"));
     emptyPriority.setAttribute("name", "priority")
@@ -474,7 +538,7 @@ function deleteProjectModal() {
         closemodal();
         clearPage();
         inbox();
-        display();
+        display(list);
     })
     const no = buttons.appendChild(document.createElement("button"));
     no.setAttribute("class", "button");

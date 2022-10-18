@@ -1,5 +1,5 @@
 import { todo, createProject } from "./item";
-import { display, projects, closemodal, clearPage, projectPage } from "./display";
+import { display, projects, closemodal, projectPage } from "./display";
 
 const list = [];
 const projectList = [];
@@ -9,8 +9,7 @@ function addTodo(title, description, dueDate, priority, project) {
     const newTodo = todo(title, description, dueDate, priority, project);
     list.push(newTodo);
     clear();
-    display();
-    console.log(list)
+    display(list);
 }
 
 // add a new project to the projects list
@@ -41,7 +40,7 @@ function clearProjects() {
 function removeTodo(remove) {
     list.splice(remove, 1);
     clear();
-    display();
+    display(list);
 }
 
 // remove 1 project from the projects list
@@ -74,7 +73,7 @@ function submit() {
     closemodal();
 }
 
-// replace a value in a todo
+// replace a project's name and updates the value in all todos from that project
 function replace(replaced, replacement) {
     for (let i = 0; i < list.length; i++) {
         function getObjKey(list, replaced) {
@@ -101,9 +100,13 @@ function replace(replaced, replacement) {
             }
         }
     }
-
     clear();
-    display();
+    display(list);
+}
+
+function replaceDate() {
+    clear();
+    display(list);
 }
 
 function replaceProject(replaced, replacement) {
@@ -112,21 +115,22 @@ function replaceProject(replaced, replacement) {
     projectList[objIndex].newProject = replacement;
 
     for (let i = 0; i < list.length; i++) {
-        const updateList = list.findIndex((obj => obj.project === replaced));
-        list[updateList].project = replacement;
+        if (list[i].project === replaced) {
+            list[i].project = replacement;
+        }
     }
 
     let input = document.querySelector(".replace-project-name");
     let title = document.createElement("h2");
     title.setAttribute("class", "project-headline");
-    title.setAttribute("id","project-title");
+    title.setAttribute("id", "project-title");
     title.textContent = replacement;
     input.replaceWith(title);
 
     let page = replacement;
-    
+
     projectPage(page);
     projects();
 }
 
-export { list, projectList, removeFromList, addTodo, addProject, removeProject, clearProjects, replaceProject, submit, removeTodo, replace, clear }
+export { list, projectList, removeFromList, addTodo, replaceDate, addProject, removeProject, clearProjects, replaceProject, submit, removeTodo, replace, clear }
