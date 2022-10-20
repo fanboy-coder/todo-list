@@ -42,9 +42,6 @@ function sidebar() {
         const del = document.getElementById("delete-project");
         del.style.visibility = "hidden";
         todoButton();
-        for (let i = 0; i < list.length; i++) {
-                list[i].project = "Inbox";
-            }
         display(list);
     });
 
@@ -153,11 +150,12 @@ function sidebar() {
     });
 }
 
+// filter todos by today and this week
 function filterbyDate(date) {
     var utc = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
 
-    let todayArr = [];
-    let weekArr = [];
+    // let todayArr = [];
+    // let weekArr = [];
     let allWeek = [];
 
     let weekDays = Array.from(Array(7).keys()).map((idx) => { const d = new Date(); d.setDate(d.getDate() - d.getDay() + idx); return d; });
@@ -169,22 +167,21 @@ function filterbyDate(date) {
     if (date === "today") {
         for (let i = 0; i < list.length; i++) {
             if (list[i].dueDate === utc) {
-                list[i].project = "Due " + date;
-                todayArr.push(list[i]);
+                list[i].timeline = "Due today";
+                console.log(list)
             }
         }
-        display(todayArr);
+        display(list);
     }
     if (date === "week") {
         for (let i = 0; i < list.length; i++) {
             for (let j = 0; j < allWeek.length; j++) {
                 if (list[i].dueDate === allWeek[j]) {
-                    list[i].project = "Due this " + date;
-                    weekArr.push(list[i]);
+                    list[i].timeline = "Due this week";
                 }
             }
         }
-        display(weekArr);
+        display(list);
     }
 }
 
@@ -209,7 +206,6 @@ function projects() {
             project.addEventListener("click", () => {
                 projectPage(page);
             })
-
         }
     }
 }
@@ -217,10 +213,10 @@ function projects() {
 // displays the todos in the page
 function display(arr) {
     const checkProject = document.getElementById("project-title");
-
+    
     for (let i = 0; i < arr.length; i++) {
 
-        if (checkProject.innerText === arr[i].project) {
+        if (checkProject.innerText === arr[i].project || checkProject.innerText === arr[i].timeline) {
             const container = document.getElementById("display");
             const div = container.appendChild(document.createElement("div"));
             div.setAttribute("class", "todo");
@@ -237,10 +233,8 @@ function display(arr) {
 
             const topRow = div.appendChild(document.createElement("div"));
             topRow.setAttribute("class", "top-row");
-
             const bottomRow = div.appendChild(document.createElement("div"));
             bottomRow.setAttribute("class", "bottom-row");
-
             const priorityColumn = div.appendChild(document.createElement("div"));
             priorityColumn.setAttribute("class", "priority-column");
 
@@ -253,7 +247,12 @@ function display(arr) {
                 if (elem === "dueDate") {
                     const p = topRow.appendChild(document.createElement("p"));
                     p.setAttribute("id", [elem]);
-                    p.innerText = "Due in: " + arr[i][elem];
+                    if (arr[i].dueDate === "") {
+                        p.innerText = "Due in: " + "-";
+                    }
+                    else {
+                        p.innerText = "Due in: " + arr[i][elem];
+                    }
                 }
                 if (elem === "priority") {
                     const div = priorityColumn.appendChild(document.createElement("div"));
@@ -384,6 +383,7 @@ function display(arr) {
     }
 }
 
+// creates the project page
 function projectPage(page) {
     clearPage();
     const main = document.getElementById("main");
@@ -548,7 +548,34 @@ function deleteProjectModal() {
         main.remove();
         div.remove();
     })
+    body.appendChild(div);
+}
 
+function duplicateProjectModal() {
+    const body = document.body;
+    const div = document.createElement("div");
+    div.setAttribute("id", "modal-bg-display");
+
+    const main = div.appendChild(document.createElement("div"));
+    main.setAttribute("id", "duplicate-modal");
+    const warning = main.appendChild(document.createElement("div"));
+    warning.setAttribute("id", "warning-box");
+    const h3 = warning.appendChild(document.createElement("h3"));
+    h3.innerText = "There's already a project with that name."
+    const h32 = warning.appendChild(document.createElement("h3"));
+    h32.innerText = "Please choose a different name."
+    const buttons = main.appendChild(document.createElement("div"));
+    buttons.setAttribute("id", "duplicate-project-buttons");
+    const ok = buttons.appendChild(document.createElement("button"));
+    ok.setAttribute("class", "button");
+    ok.setAttribute("id", "ok");
+    ok.innerText = "Ok";
+    ok.addEventListener("click", () => {
+        closemodal();
+        clearPage();
+        inbox();
+        display(list);
+    })
     body.appendChild(div);
 }
 
@@ -578,12 +605,15 @@ function todoButton() {
                     modal();
                 });
             }
+            else {
+                check.style.visibility = "visible";
+            }
         }
 
     }
     if (checkProject.innerText === "Due today" || checkProject.innerText === "Due this week") {
         if (check) {
-            check.remove();
+            check.style.visibility = "hidden";
         }
     }
 }
@@ -598,4 +628,4 @@ function clearPage() {
     display.remove();
 }
 
-export { sidebar, projects, display, modal, clearPage, closemodal, inbox, projectPage }
+export { sidebar, projects, display, modal, clearPage, closemodal, inbox, projectPage, duplicateProjectModal }

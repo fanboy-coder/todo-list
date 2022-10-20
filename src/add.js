@@ -1,5 +1,5 @@
 import { todo, createProject } from "./item";
-import { display, projects, closemodal, projectPage } from "./display";
+import { display, projects, closemodal, projectPage, duplicateProjectModal } from "./display";
 
 const list = [];
 const projectList = [];
@@ -14,11 +14,22 @@ function addTodo(title, description, dueDate, priority, project) {
 
 // add a new project to the projects list
 function addProject(projectname) {
-    const newProject = createProject(projectname);
-    projectList.push(newProject);
-    clearProjects();
-    projects();
+
+    let check = {newProject: projectname}
+    
+    let verify = projectList.some(project => project.newProject === check.newProject)
+
+    if(!verify) {
+        const newProject = createProject(projectname);
+        projectList.push(newProject);
+        clearProjects();
+        projects();
+    }
+    else {
+        duplicateProjectModal();
+    }
 }
+
 
 // clear all todos
 function clear() {
